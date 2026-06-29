@@ -1,6 +1,7 @@
 """Configuracion de IMDb usando Pydantic Settings."""
 
 from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Directorio raíz del proyecto (donde está pyproject.toml)
@@ -17,9 +18,9 @@ class Settings(BaseSettings):
     )
 
     # Base de datos PostgreSQL
-    db_url: str = (
-        "postgresql+psycopg://marc@/imdb_db"
-    )
+    # Se puede sobreescribir con la variable de entorno
+    # IMDB_DB_URL o el fichero .env
+    db_url: str = "postgresql+psycopg://localhost/imdb_db"
 
     @property
     def data_dir(self) -> Path:

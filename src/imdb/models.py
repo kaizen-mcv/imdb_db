@@ -26,28 +26,14 @@ class TitleBasics(Base):
 
     __tablename__ = "title_basics"
 
-    tconst: Mapped[str] = mapped_column(
-        String(12), primary_key=True
-    )
-    title_type: Mapped[str | None] = mapped_column(
-        String(20)
-    )
-    primary_title: Mapped[str | None] = mapped_column(
-        String(500)
-    )
-    original_title: Mapped[str | None] = mapped_column(
-        String(500)
-    )
+    tconst: Mapped[str] = mapped_column(String(12), primary_key=True)
+    title_type: Mapped[str | None] = mapped_column(String(20))
+    primary_title: Mapped[str | None] = mapped_column(String(500))
+    original_title: Mapped[str | None] = mapped_column(String(500))
     is_adult: Mapped[bool | None] = mapped_column(Boolean)
-    start_year: Mapped[int | None] = mapped_column(
-        SmallInteger
-    )
-    end_year: Mapped[int | None] = mapped_column(
-        SmallInteger
-    )
-    runtime_minutes: Mapped[int | None] = mapped_column(
-        Integer
-    )
+    start_year: Mapped[int | None] = mapped_column(SmallInteger)
+    end_year: Mapped[int | None] = mapped_column(SmallInteger)
+    runtime_minutes: Mapped[int | None] = mapped_column(Integer)
     genres: Mapped[str | None] = mapped_column(String(200))
 
     __table_args__ = (
@@ -62,17 +48,11 @@ class TitleRatings(Base):
 
     __tablename__ = "title_ratings"
 
-    tconst: Mapped[str] = mapped_column(
-        String(12), primary_key=True
-    )
-    average_rating: Mapped[float | None] = mapped_column(
-        Numeric(3, 1)
-    )
+    tconst: Mapped[str] = mapped_column(String(12), primary_key=True)
+    average_rating: Mapped[float | None] = mapped_column(Numeric(3, 1))
     num_votes: Mapped[int | None] = mapped_column(Integer)
 
-    __table_args__ = (
-        Index("ix_title_ratings_votes", "num_votes"),
-    )
+    __table_args__ = (Index("ix_title_ratings_votes", "num_votes"),)
 
 
 class NameBasics(Base):
@@ -80,28 +60,14 @@ class NameBasics(Base):
 
     __tablename__ = "name_basics"
 
-    nconst: Mapped[str] = mapped_column(
-        String(12), primary_key=True
-    )
-    primary_name: Mapped[str | None] = mapped_column(
-        String(200)
-    )
-    birth_year: Mapped[int | None] = mapped_column(
-        SmallInteger
-    )
-    death_year: Mapped[int | None] = mapped_column(
-        SmallInteger
-    )
-    primary_profession: Mapped[str | None] = mapped_column(
-        Text
-    )
-    known_for_titles: Mapped[str | None] = mapped_column(
-        Text
-    )
+    nconst: Mapped[str] = mapped_column(String(12), primary_key=True)
+    primary_name: Mapped[str | None] = mapped_column(String(200))
+    birth_year: Mapped[int | None] = mapped_column(SmallInteger)
+    death_year: Mapped[int | None] = mapped_column(SmallInteger)
+    primary_profession: Mapped[str | None] = mapped_column(Text)
+    known_for_titles: Mapped[str | None] = mapped_column(Text)
 
-    __table_args__ = (
-        Index("ix_name_basics_name", "primary_name"),
-    )
+    __table_args__ = (Index("ix_name_basics_name", "primary_name"),)
 
 
 class TitleAkas(Base):
@@ -112,32 +78,19 @@ class TitleAkas(Base):
     id: Mapped[int] = mapped_column(
         Integer, primary_key=True, autoincrement=True
     )
-    title_id: Mapped[str | None] = mapped_column(
-        String(12)
-    )
-    ordering: Mapped[int | None] = mapped_column(
-        SmallInteger
-    )
+    title_id: Mapped[str | None] = mapped_column(String(12))
+    ordering: Mapped[int | None] = mapped_column(SmallInteger)
     title: Mapped[str | None] = mapped_column(Text)
-    region: Mapped[str | None] = mapped_column(
-        String(10)
-    )
-    language: Mapped[str | None] = mapped_column(
-        String(10)
-    )
-    types: Mapped[str | None] = mapped_column(
-        String(100)
-    )
-    attributes: Mapped[str | None] = mapped_column(
-        String(500)
-    )
-    is_original_title: Mapped[bool | None] = mapped_column(
-        Boolean
-    )
+    region: Mapped[str | None] = mapped_column(String(10))
+    language: Mapped[str | None] = mapped_column(String(10))
+    types: Mapped[str | None] = mapped_column(String(100))
+    attributes: Mapped[str | None] = mapped_column(String(500))
+    is_original_title: Mapped[bool | None] = mapped_column(Boolean)
 
     __table_args__ = (
         UniqueConstraint(
-            "title_id", "ordering",
+            "title_id",
+            "ordering",
             name="uq_title_akas_id_ord",
         ),
         Index("ix_title_akas_title_id", "title_id"),
@@ -150,9 +103,7 @@ class TitleCrew(Base):
 
     __tablename__ = "title_crew"
 
-    tconst: Mapped[str] = mapped_column(
-        String(12), primary_key=True
-    )
+    tconst: Mapped[str] = mapped_column(String(12), primary_key=True)
     directors: Mapped[str | None] = mapped_column(Text)
     writers: Mapped[str | None] = mapped_column(Text)
 
@@ -162,24 +113,17 @@ class TitleEpisode(Base):
 
     __tablename__ = "title_episode"
 
-    tconst: Mapped[str] = mapped_column(
-        String(12), primary_key=True
-    )
-    parent_tconst: Mapped[str | None] = mapped_column(
-        String(12)
-    )
-    season_number: Mapped[int | None] = mapped_column(
-        Integer
-    )
-    episode_number: Mapped[int | None] = mapped_column(
-        Integer
-    )
+    tconst: Mapped[str] = mapped_column(String(12), primary_key=True)
+    parent_tconst: Mapped[str | None] = mapped_column(String(12))
+    season_number: Mapped[int | None] = mapped_column(Integer)
+    episode_number: Mapped[int | None] = mapped_column(Integer)
 
     __table_args__ = (
         Index("ix_title_episode_parent", "parent_tconst"),
         Index(
             "ix_title_episode_parent_season",
-            "parent_tconst", "season_number",
+            "parent_tconst",
+            "season_number",
             "episode_number",
         ),
     )
@@ -193,31 +137,22 @@ class TitlePrincipals(Base):
     id: Mapped[int] = mapped_column(
         Integer, primary_key=True, autoincrement=True
     )
-    tconst: Mapped[str | None] = mapped_column(
-        String(12)
-    )
-    ordering: Mapped[int | None] = mapped_column(
-        SmallInteger
-    )
-    nconst: Mapped[str | None] = mapped_column(
-        String(12)
-    )
-    category: Mapped[str | None] = mapped_column(
-        String(50)
-    )
+    tconst: Mapped[str | None] = mapped_column(String(12))
+    ordering: Mapped[int | None] = mapped_column(SmallInteger)
+    nconst: Mapped[str | None] = mapped_column(String(12))
+    category: Mapped[str | None] = mapped_column(String(50))
     job: Mapped[str | None] = mapped_column(Text)
     characters: Mapped[str | None] = mapped_column(Text)
 
     __table_args__ = (
         UniqueConstraint(
-            "tconst", "ordering",
+            "tconst",
+            "ordering",
             name="uq_title_principals_id_ord",
         ),
         Index("ix_title_principals_tconst", "tconst"),
         Index("ix_title_principals_nconst", "nconst"),
-        Index(
-            "ix_title_principals_category", "category"
-        ),
+        Index("ix_title_principals_category", "category"),
     )
 
 
@@ -229,9 +164,15 @@ DATASETS = {
         "table": "title_basics",
         "model": TitleBasics,
         "columns": [
-            "tconst", "title_type", "primary_title",
-            "original_title", "is_adult", "start_year",
-            "end_year", "runtime_minutes", "genres",
+            "tconst",
+            "title_type",
+            "primary_title",
+            "original_title",
+            "is_adult",
+            "start_year",
+            "end_year",
+            "runtime_minutes",
+            "genres",
         ],
     },
     "name.basics": {
@@ -239,8 +180,11 @@ DATASETS = {
         "table": "name_basics",
         "model": NameBasics,
         "columns": [
-            "nconst", "primary_name", "birth_year",
-            "death_year", "primary_profession",
+            "nconst",
+            "primary_name",
+            "birth_year",
+            "death_year",
+            "primary_profession",
             "known_for_titles",
         ],
     },
@@ -249,9 +193,14 @@ DATASETS = {
         "table": "title_akas",
         "model": TitleAkas,
         "columns": [
-            "title_id", "ordering", "title",
-            "region", "language", "types",
-            "attributes", "is_original_title",
+            "title_id",
+            "ordering",
+            "title",
+            "region",
+            "language",
+            "types",
+            "attributes",
+            "is_original_title",
         ],
     },
     "title.crew": {
@@ -259,7 +208,9 @@ DATASETS = {
         "table": "title_crew",
         "model": TitleCrew,
         "columns": [
-            "tconst", "directors", "writers",
+            "tconst",
+            "directors",
+            "writers",
         ],
     },
     "title.episode": {
@@ -267,8 +218,10 @@ DATASETS = {
         "table": "title_episode",
         "model": TitleEpisode,
         "columns": [
-            "tconst", "parent_tconst",
-            "season_number", "episode_number",
+            "tconst",
+            "parent_tconst",
+            "season_number",
+            "episode_number",
         ],
     },
     "title.principals": {
@@ -276,8 +229,12 @@ DATASETS = {
         "table": "title_principals",
         "model": TitlePrincipals,
         "columns": [
-            "tconst", "ordering", "nconst",
-            "category", "job", "characters",
+            "tconst",
+            "ordering",
+            "nconst",
+            "category",
+            "job",
+            "characters",
         ],
     },
     "title.ratings": {
@@ -285,7 +242,9 @@ DATASETS = {
         "table": "title_ratings",
         "model": TitleRatings,
         "columns": [
-            "tconst", "average_rating", "num_votes",
+            "tconst",
+            "average_rating",
+            "num_votes",
         ],
     },
 }

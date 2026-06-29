@@ -4,14 +4,13 @@ import logging
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 from .config import settings
 
 
 def setup_logging(
     log_level: str = "INFO",
-    log_file: Optional[str] = None,
+    log_file: str | None = None,
     console: bool = True,
 ) -> Path:
     """
@@ -39,9 +38,7 @@ def setup_logging(
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-    file_handler = logging.FileHandler(
-        log_path, encoding="utf-8"
-    )
+    file_handler = logging.FileHandler(log_path, encoding="utf-8")
     file_handler.setFormatter(formatter)
 
     handlers: list[logging.Handler] = [file_handler]

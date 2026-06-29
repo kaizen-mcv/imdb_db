@@ -1,13 +1,14 @@
 """Descarga de ficheros TSV.gz de IMDb."""
 
-import requests
 from pathlib import Path
+
+import requests
 from rich.progress import (
-    Progress,
     BarColumn,
     DownloadColumn,
-    TransferSpeedColumn,
+    Progress,
     TimeRemainingColumn,
+    TransferSpeedColumn,
 )
 
 from .config import settings
@@ -61,7 +62,8 @@ def download_dataset(
         if remote_size and local_size == remote_size:
             logger.info(
                 "Saltando %s (ya descargado, %d MB)",
-                name, local_size // (1024 * 1024),
+                name,
+                local_size // (1024 * 1024),
             )
             return dest
 
@@ -81,18 +83,14 @@ def download_dataset(
         )
 
         with progress:
-            task = progress.add_task(
-                f"[cyan]{info['url']}", total=total
-            )
+            task = progress.add_task(f"[cyan]{info['url']}", total=total)
             with open(dest, "wb") as f:
                 for chunk in resp.iter_content(CHUNK_SIZE):
                     f.write(chunk)
                     progress.update(task, advance=len(chunk))
 
         size_mb = dest.stat().st_size / (1024 * 1024)
-        logger.info(
-            "Descargado %s (%.1f MB)", name, size_mb
-        )
+        logger.info("Descargado %s (%.1f MB)", name, size_mb)
         return dest
 
     except requests.RequestException as e:

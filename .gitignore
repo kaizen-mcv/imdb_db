@@ -1,8 +1,39 @@
+# Entornos virtuales
 .venv/
+venv/
+env/
+
+# Bytecode y caches
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Empaquetado
 *.egg-info/
 dist/
 build/
+
+# Secretos y configuracion local
 .env
+.env.local
+
+# Datos descargados (demasiado grandes, se regeneran)
 data/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# SO
+.DS_Store
+Thumbs.db
+
+# Cobertura
+.coverage
+htmlcov/
+coverage.xml

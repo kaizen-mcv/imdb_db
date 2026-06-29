@@ -5,15 +5,12 @@ import gzip
 import sys
 from pathlib import Path
 
-# Algunos campos de IMDb superan el limite por defecto
-csv.field_size_limit(sys.maxsize)
-
 import psycopg
 from psycopg import sql
 from rich.progress import (
-    Progress,
     BarColumn,
     MofNCompleteColumn,
+    Progress,
     SpinnerColumn,
     TimeElapsedColumn,
 )
@@ -22,14 +19,15 @@ from .config import settings
 from .logger import get_logger
 from .models import DATASETS, LOAD_ORDER
 
+# Algunos campos de IMDb superan el limite por defecto del modulo csv
+csv.field_size_limit(sys.maxsize)
+
 logger = get_logger(__name__)
 
 
 def _psycopg_url() -> str:
     """Convierte URL de SQLAlchemy a psycopg3."""
-    return settings.db_url.replace(
-        "postgresql+psycopg", "postgresql"
-    )
+    return settings.db_url.replace("postgresql+psycopg", "postgresql")
 
 
 def _limpiar_valor(valor: str) -> str | None:
@@ -45,60 +43,60 @@ def _col(fila: list[str], i: int) -> str:
 def _transformar_title_basics(fila: list[str]) -> tuple:
     """Transforma fila de title.basics.tsv."""
     return (
-        fila[0],                          # tconst
-        _limpiar_valor(_col(fila, 1)),    # title_type
-        _limpiar_valor(_col(fila, 2)),    # primary_title
-        _limpiar_valor(_col(fila, 3)),    # original_title
-        _bool(_col(fila, 4)),             # is_adult
-        _int(_col(fila, 5)),              # start_year
-        _int(_col(fila, 6)),              # end_year
-        _int(_col(fila, 7)),              # runtime_minutes
-        _limpiar_valor(_col(fila, 8)),    # genres
+        fila[0],  # tconst
+        _limpiar_valor(_col(fila, 1)),  # title_type
+        _limpiar_valor(_col(fila, 2)),  # primary_title
+        _limpiar_valor(_col(fila, 3)),  # original_title
+        _bool(_col(fila, 4)),  # is_adult
+        _int(_col(fila, 5)),  # start_year
+        _int(_col(fila, 6)),  # end_year
+        _int(_col(fila, 7)),  # runtime_minutes
+        _limpiar_valor(_col(fila, 8)),  # genres
     )
 
 
 def _transformar_name_basics(fila: list[str]) -> tuple:
     """Transforma fila de name.basics.tsv."""
     return (
-        fila[0],                          # nconst
-        _limpiar_valor(_col(fila, 1)),    # primary_name
-        _int(_col(fila, 2)),              # birth_year
-        _int(_col(fila, 3)),              # death_year
-        _limpiar_valor(_col(fila, 4)),    # primary_profession
-        _limpiar_valor(_col(fila, 5)),    # known_for_titles
+        fila[0],  # nconst
+        _limpiar_valor(_col(fila, 1)),  # primary_name
+        _int(_col(fila, 2)),  # birth_year
+        _int(_col(fila, 3)),  # death_year
+        _limpiar_valor(_col(fila, 4)),  # primary_profession
+        _limpiar_valor(_col(fila, 5)),  # known_for_titles
     )
 
 
 def _transformar_title_akas(fila: list[str]) -> tuple:
     """Transforma fila de title.akas.tsv."""
     return (
-        _limpiar_valor(_col(fila, 0)),    # title_id
-        _int(_col(fila, 1)),              # ordering
-        _limpiar_valor(_col(fila, 2)),    # title
-        _limpiar_valor(_col(fila, 3)),    # region
-        _limpiar_valor(_col(fila, 4)),    # language
-        _limpiar_valor(_col(fila, 5)),    # types
-        _limpiar_valor(_col(fila, 6)),    # attributes
-        _bool(_col(fila, 7)),             # is_original_title
+        _limpiar_valor(_col(fila, 0)),  # title_id
+        _int(_col(fila, 1)),  # ordering
+        _limpiar_valor(_col(fila, 2)),  # title
+        _limpiar_valor(_col(fila, 3)),  # region
+        _limpiar_valor(_col(fila, 4)),  # language
+        _limpiar_valor(_col(fila, 5)),  # types
+        _limpiar_valor(_col(fila, 6)),  # attributes
+        _bool(_col(fila, 7)),  # is_original_title
     )
 
 
 def _transformar_title_crew(fila: list[str]) -> tuple:
     """Transforma fila de title.crew.tsv."""
     return (
-        fila[0],                          # tconst
-        _limpiar_valor(_col(fila, 1)),    # directors
-        _limpiar_valor(_col(fila, 2)),    # writers
+        fila[0],  # tconst
+        _limpiar_valor(_col(fila, 1)),  # directors
+        _limpiar_valor(_col(fila, 2)),  # writers
     )
 
 
 def _transformar_title_episode(fila: list[str]) -> tuple:
     """Transforma fila de title.episode.tsv."""
     return (
-        fila[0],                          # tconst
-        _limpiar_valor(_col(fila, 1)),    # parent_tconst
-        _int(_col(fila, 2)),              # season_number
-        _int(_col(fila, 3)),              # episode_number
+        fila[0],  # tconst
+        _limpiar_valor(_col(fila, 1)),  # parent_tconst
+        _int(_col(fila, 2)),  # season_number
+        _int(_col(fila, 3)),  # episode_number
     )
 
 
@@ -107,21 +105,21 @@ def _transformar_title_principals(
 ) -> tuple:
     """Transforma fila de title.principals.tsv."""
     return (
-        _limpiar_valor(_col(fila, 0)),    # tconst
-        _int(_col(fila, 1)),              # ordering
-        _limpiar_valor(_col(fila, 2)),    # nconst
-        _limpiar_valor(_col(fila, 3)),    # category
-        _limpiar_valor(_col(fila, 4)),    # job
-        _limpiar_valor(_col(fila, 5)),    # characters
+        _limpiar_valor(_col(fila, 0)),  # tconst
+        _int(_col(fila, 1)),  # ordering
+        _limpiar_valor(_col(fila, 2)),  # nconst
+        _limpiar_valor(_col(fila, 3)),  # category
+        _limpiar_valor(_col(fila, 4)),  # job
+        _limpiar_valor(_col(fila, 5)),  # characters
     )
 
 
 def _transformar_title_ratings(fila: list[str]) -> tuple:
     """Transforma fila de title.ratings.tsv."""
     return (
-        fila[0],                          # tconst
-        _float(fila[1]),                  # average_rating
-        _int(fila[2]),                    # num_votes
+        fila[0],  # tconst
+        _float(fila[1]),  # average_rating
+        _int(fila[2]),  # num_votes
     )
 
 
@@ -198,8 +196,7 @@ def importar_dataset(
 
     if not archivo.exists():
         logger.error(
-            "Fichero no encontrado: %s. "
-            "Ejecuta 'imdb download' primero.",
+            "Fichero no encontrado: %s. Ejecuta 'imdb download' primero.",
             archivo,
         )
         return 0
@@ -212,7 +209,9 @@ def importar_dataset(
     total = _contar_lineas(archivo)
     logger.info(
         "Importando %s (%d filas) a tabla %s",
-        name, total, tabla,
+        name,
+        total,
+        tabla,
     )
 
     conn_url = _psycopg_url()
@@ -222,25 +221,21 @@ def importar_dataset(
         with conn.cursor() as cur:
             if truncate:
                 cur.execute(
-                    sql.SQL("TRUNCATE TABLE {} CASCADE")
-                    .format(sql.Identifier(tabla))
+                    sql.SQL("TRUNCATE TABLE {} CASCADE").format(
+                        sql.Identifier(tabla)
+                    )
                 )
                 logger.info("Tabla %s vaciada", tabla)
 
             # COPY con streaming
-            copy_sql = sql.SQL(
-                "COPY {} ({}) FROM STDIN"
-            ).format(
+            copy_sql = sql.SQL("COPY {} ({}) FROM STDIN").format(
                 sql.Identifier(tabla),
-                sql.SQL(", ").join(
-                    map(sql.Identifier, columnas)
-                ),
+                sql.SQL(", ").join(map(sql.Identifier, columnas)),
             )
 
             progress = Progress(
                 SpinnerColumn(),
-                "[progress.description]"
-                "{task.description}",
+                "[progress.description]{task.description}",
                 BarColumn(),
                 MofNCompleteColumn(),
                 TimeElapsedColumn(),
@@ -252,12 +247,8 @@ def importar_dataset(
                     total=total,
                 )
                 with cur.copy(copy_sql) as copy:
-                    with gzip.open(
-                        archivo, "rt", encoding="utf-8"
-                    ) as f:
-                        reader = csv.reader(
-                            f, delimiter="\t"
-                        )
+                    with gzip.open(archivo, "rt", encoding="utf-8") as f:
+                        reader = csv.reader(f, delimiter="\t")
                         next(reader)  # saltar header
                         for fila in reader:
                             registro = transformar(fila)
@@ -269,15 +260,11 @@ def importar_dataset(
                                     completed=filas_ok,
                                 )
                     # Actualizar al final
-                    progress.update(
-                        task, completed=filas_ok
-                    )
+                    progress.update(task, completed=filas_ok)
 
         conn.commit()
 
-    logger.info(
-        "Importadas %d filas en %s", filas_ok, tabla
-    )
+    logger.info("Importadas %d filas en %s", filas_ok, tabla)
     return filas_ok
 
 
