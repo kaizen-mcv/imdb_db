@@ -9,7 +9,7 @@ description = "CLI para descargar e importar los IMDb Non-Commercial Datasets a 
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
-authors = [{ name = "Marc", email = "" }]
+authors = [{ name = "kaizen-mcv" }]
 keywords = ["imdb", "postgresql", "etl", "cli", "dataset"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
